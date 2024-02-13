@@ -4,7 +4,9 @@
 
 #include <iostream> // 입출력 스트림을 조작하기 위한 함수와 객체를 제공(예: std::setw)
 #include <string>
-#include <iomanip>
+#include <iomanip> // setw()
+
+// TODO: phone number: 숫자만 입력받게 하기
 
 /*
 `firstName`, `lastName`, `nickName`, `phoneNumber`, `darkestSecret` 지역변수의 값을 사용하여 `newContact`라는 새 `Contact` 객체를 생성하고 있어. 
@@ -41,31 +43,48 @@ getline을 사용하는 이유는 사용자 입력에서 공백을 포함하는 
 //}
 
 // SEARCH
-
 // 문자열이 10자를 초과할 경우 마지막 문자를 '.'으로 대체하는 함수
 std::string truncateString(const std::string& str) {
-    return str.length() > 10 ? str.substr(0, 9) + "." : str;
+    if (str.length() > 10)
+        return str.substr(0, 9) + '.';
+    else
+        return str;
 }
 
 void searchContact(const PhoneBook& phoneBook) {
-    // 연락처 목록을 출력
-    for (int i = 0; i < phoneBook.getCurrentSize(); ++i) {
+    if (phoneBook.getCurrentSize() == 0) {
+        std::cout << "No contacts available.\nPlease ADD a contact first.\n";
+        return; // 함수 종료
+    }
+
+	std::cout	<< std::setw(10) << "INDEX" << " | "
+				<< std::setw(10) << "FIRST NAME" << " | "
+				<< std::setw(10) << "LAST NAME" << " | "
+				<< std::setw(10) << "NICK NAME" << std::endl;
+
+	std::cout	<< std::setw(10) << "__________" << " | "
+				<< std::setw(10) << "__________" << " | "
+				<< std::setw(10) << "__________" << " | "
+				<< std::setw(10) << "__________" << std::endl;
+
+    for (int i = 0; i < phoneBook.getCurrentSize(); i++) {
         const Contact& contact = phoneBook.getContact(i);
-        std::cout << std::setw(10) << i << " | "
+        
+		std::cout << std::setw(10) << i << " | "
                   << std::setw(10) << truncateString(contact.getFirstName()) << " | "
                   << std::setw(10) << truncateString(contact.getLastName()) << " | "
                   << std::setw(10) << truncateString(contact.getNickName()) << std::endl;
     }
 
     // 사용자로부터 인덱스 입력 받기
-    std::cout << "Enter the index of the contact to display: ";
+    std::cout << "Enter the index of the contact to display: \n";
     int index;
     std::cin >> index;
 
     // 인덱스 유효성 검사 및 연락처 상세 정보 출력
     if (index >= 0 && index < phoneBook.getCurrentSize()) {
         const Contact& contact = phoneBook.getContact(index);
-        std::cout << "First Name: " << contact.getFirstName() << std::endl
+        std::cout << "\nFirst Name: " << contact.getFirstName() << std::endl
                   << "Last Name: " << contact.getLastName() << std::endl
                   << "Nickname: " << contact.getNickName() << std::endl
                   << "Phone Number: " << contact.getPhoneNumber() << std::endl
@@ -77,25 +96,63 @@ void searchContact(const PhoneBook& phoneBook) {
 
 
 
+//void getInput(const std::string& fieldName, std::string& fieldValue) {
+//	while (1) {
+//		std::cout << fieldName << ": ";
+//		std::getline(std::cin, fieldValue);
 
+//		if (fieldName == "Phone Number") {
+//			bool isNumber = true;
+//			for (size_t i = 0; i < fieldValue.length(); i++) {
+//				if (!isdigit(fieldValue[i])) {
+//					isNumber = false;
+//					break;
+//				}
+//			}
+//			if (!isNumber) {
+//				std::cout << "Enter numbers only for " << fieldName << ".\n";
+//				continue;
+//			}
+//		}
+//		if (!fieldValue.empty())
+//			break;
+//		std::cout << fieldName << " field is empty. Enter it again.\n";
+//	}
+//}
 
-
-
-
-// ADD
-void getInput(const std::string& fieldName, std::string& fieldValue) {
-	while (1) {
-		std::cout << fieldName << ": ";
-		std::getline(std::cin, fieldValue);
-		if (!fieldValue.empty())
-			break;
-		std::cout << fieldName << " field is empty. Enter it again.\n";
-	}
+// 숫자만 있는지 확인하는 함수
+bool isNumber(const std::string& str) {
+    for (size_t i = 0; i < str.length(); i++) {
+        if (!isdigit(str[i])) {
+            return false;
+        }
+    }
+    return true;
 }
+
+// 입력 받는 함수
+void getInput(const std::string& fieldName, std::string& fieldValue) {
+    while (true) {
+        std::cout << fieldName << ": ";
+        std::getline(std::cin, fieldValue);
+
+        if (fieldName == "Phone Number" && !isNumber(fieldValue)) {
+            std::cout << "Enter numbers only for " << fieldName << ".\n";
+            continue;
+        }
+
+        if (!fieldValue.empty())
+            break;
+        std::cout << fieldName << " field is empty. Enter it again.\n";
+    }
+}
+
 
 void addNewContact(PhoneBook& phoneBook) {
 	std::string firstName, lastName, nickName, phoneNumber, darkestSecret;
 	
+	std::cout << "\nEnter the following information.\n\n";
+
 	getInput("First Name", firstName);
 	getInput("Last Name", lastName);
 	getInput("Nickname", nickName);
@@ -117,9 +174,10 @@ int	main()
 
 	while (1)
 	{
-		std::cout << "\nEnter the command from ADD, SEARCH, or EIXT. \n";
+		std::cout << "\nEnter the command from ADD, SEARCH, or EIXT.\n";
 		std::getline(std::cin, command);
 
+// C++에서는 문자열을 직접 비교할 수 있다.문자열 리터럴 ADD와 비교함
 		if (command == "ADD")
 		{
 			addNewContact(phoneBook);
@@ -137,8 +195,6 @@ int	main()
 			std::cout << "Invalid command. Enter again!" << std::endl;
 		}
 	}
-
-
 
 	return (0);
 }

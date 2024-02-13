@@ -5,7 +5,6 @@
 #include <iostream>
 #include <string>
 
-
 class PhoneBook {
 private:
 	Contact	contacts[8]; // 이 부분은 Contact 클래스에서 초기화하기 때문에 여기서는 초기화 안함.

@@ -15,6 +15,7 @@
 
 class Contact {
 private:
+// 클래스 내버 멤버함수
 	std::string	firstName;
 	std::string	lastName;
 	std::string	nickName;
@@ -22,7 +23,7 @@ private:
 	std::string	darkestSecret;
 
 public:
-	// 기본 생성자: Contact의 객체를 기본값인 빈 문자열로 안전하게 초기화하는 목적. 사용자가 빈문자열 쳐도 객체는 정의된 기본 상태가 됨.
+	// 기본 생성자: Contact의 객체를 기본값인 빈 문자열로 안전하게 초기화하는 목적. 사용자가 빈문자열 쳐도 객체는 정의된 기본 상태가 됨. On program start-up, the phonebook is empty and the user is prompted to enter one of three commands. 
 	Contact() : firstName(""), lastName(""), nickName(""), 
 	phoneNumber(""), darkestSecret("") {}
 
