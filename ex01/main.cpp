@@ -6,121 +6,63 @@
 #include <string>
 #include <iomanip> // setw()
 
-// TODO: phone number: 숫자만 입력받게 하기
 
-/*
-`firstName`, `lastName`, `nickName`, `phoneNumber`, `darkestSecret` 지역변수의 값을 사용하여 `newContact`라는 새 `Contact` 객체를 생성하고 있어. 
-
-이렇게 생성된 객체는 함수가 종료되어 지역변수들이 사라지더라도 `PhoneBook`에 저장되는데, 객체의 복사본이 아니라 객체 자체가 `PhoneBook`에 저장되기 때문에, 입력받은 정보는 프로그램 내에서 계속 유효하게 유지돼.
-*/
-
-/* 
-getline을 사용하는 이유는 사용자 입력에서 공백을 포함하는 문자열을 전체적으로 읽을 수 있기 때문이야. std::cin >>를 사용하면 공백, 탭, 새 줄 문자를 입력 종료로 간주하여 공백 이전의 문자열만 읽게 돼. 연락처 정보 같이 공백을 포함할 수 있는 입력을 처리할 때는 std::getline이 더 적합해. 
-*/
-
-//void addNewContact(PhoneBook& phoneBook) {
-//	std::string firstName, lastName, nickName, phoneNumber, darkestSecret;
-	
-//	// 사용자 입력 받기
-//	std::cout << "First Name: ";
-//	std::getline(std::cin, firstName);
-//	std::cout << "Last Name: ";
-//	std::getline(std::cin, lastName);
-//	std::cout << "Nickname: ";
-//	std::getline(std::cin, nickName);
-//	std::cout << "Phone Number: ";
-//	std::getline(std::cin, phoneNumber);
-//	std::cout << "Darkest Secret: ";
-//	std::getline(std::cin, darkestSecret);
-
-//	// Contact 객체 생성
-//	Contact newContact(firstName, lastName, nickName, phoneNumber, darkestSecret);
-	
-//	// PhoneBook에 연락처 추가
-//	phoneBook.addContact(newContact);
-
-//	std::cout << "New contact added successfully.\n" << std::endl;
-//}
-
-// SEARCH
-// 문자열이 10자를 초과할 경우 마지막 문자를 '.'으로 대체하는 함수
 std::string truncateString(const std::string& str) {
-    if (str.length() > 10)
-        return str.substr(0, 9) + '.';
-    else
-        return str;
+	if (str.length() > 10)
+		return str.substr(0, 9) + '.';
+	else
+		return str;
 }
 
 void searchContact(const PhoneBook& phoneBook) {
     if (phoneBook.getCurrentSize() == 0) {
         std::cout << "No contacts available.\nPlease ADD a contact first.\n";
-        return; // 함수 종료
+        return;
     }
 
-	std::cout	<< std::setw(10) << "INDEX" << " | "
+	std::cout	<< std::right << std::setw(10) << "INDEX" << " | "
 				<< std::setw(10) << "FIRST NAME" << " | "
 				<< std::setw(10) << "LAST NAME" << " | "
 				<< std::setw(10) << "NICK NAME" << std::endl;
 
-	std::cout	<< std::setw(10) << "__________" << " | "
+	std::cout	<< std::right << std::setw(10) << "__________" << " | "
 				<< std::setw(10) << "__________" << " | "
 				<< std::setw(10) << "__________" << " | "
 				<< std::setw(10) << "__________" << std::endl;
 
-    for (int i = 0; i < phoneBook.getCurrentSize(); i++) {
-        const Contact& contact = phoneBook.getContact(i);
-        
-		std::cout << std::setw(10) << i << " | "
-                  << std::setw(10) << truncateString(contact.getFirstName()) << " | "
-                  << std::setw(10) << truncateString(contact.getLastName()) << " | "
-                  << std::setw(10) << truncateString(contact.getNickName()) << std::endl;
-    }
+	for (int i = 0; i < phoneBook.getCurrentSize(); i++) {
+		const Contact& contact = phoneBook.getContact(i);
+		
+		std::cout << std::right << std::setw(10) << i << " | "
+				<< std::setw(10) << truncateString(contact.getFirstName()) << " | "
+				<< std::setw(10) << truncateString(contact.getLastName()) << " | "
+				<< std::setw(10) << truncateString(contact.getNickName()) << std::endl;
+	}
 
-    // 사용자로부터 인덱스 입력 받기
-    std::cout << "Enter the index of the contact to display: \n";
-    int index;
-    std::cin >> index;
+	int index;
+	while (true) {
+		std::cout << "Enter the index of the contact to display: \n";
+		std::cin >> index;
 
-    // 인덱스 유효성 검사 및 연락처 상세 정보 출력
-    if (index >= 0 && index < phoneBook.getCurrentSize()) {
-        const Contact& contact = phoneBook.getContact(index);
-        std::cout << "\nFirst Name: " << contact.getFirstName() << std::endl
-                  << "Last Name: " << contact.getLastName() << std::endl
-                  << "Nickname: " << contact.getNickName() << std::endl
-                  << "Phone Number: " << contact.getPhoneNumber() << std::endl
-                  << "Darkest Secret: " << contact.getDarkestSecret() << std::endl;
-    } else {
-        std::cout << "Invalid index." << std::endl;
-    }
+		if (std::cin.good() && index >= 0 && index < phoneBook.getCurrentSize()) {
+			const Contact& contact = phoneBook.getContact(index);
+				std::cout << "\nFirst Name: " << contact.getFirstName() << std::endl
+						<< "Last Name: " << contact.getLastName() << std::endl
+						<< "Nickname: " << contact.getNickName() << std::endl
+						<< "Phone Number: " << contact.getPhoneNumber() << std::endl
+						<< "Darkest Secret: " << contact.getDarkestSecret() << std::endl;
+						break;
+		} else if (std::cin.fail()) {
+			std::cout << "Invalid input. Please enter a valid number.\n";
+			std::cin.clear(); // 스트림의 오류 상태 클리어
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 버퍼 비우기
+		} else {
+			std::cout << "Invalid index." << std::endl;
+		}
+	}
+
 }
 
-
-
-//void getInput(const std::string& fieldName, std::string& fieldValue) {
-//	while (1) {
-//		std::cout << fieldName << ": ";
-//		std::getline(std::cin, fieldValue);
-
-//		if (fieldName == "Phone Number") {
-//			bool isNumber = true;
-//			for (size_t i = 0; i < fieldValue.length(); i++) {
-//				if (!isdigit(fieldValue[i])) {
-//					isNumber = false;
-//					break;
-//				}
-//			}
-//			if (!isNumber) {
-//				std::cout << "Enter numbers only for " << fieldName << ".\n";
-//				continue;
-//			}
-//		}
-//		if (!fieldValue.empty())
-//			break;
-//		std::cout << fieldName << " field is empty. Enter it again.\n";
-//	}
-//}
-
-// 숫자만 있는지 확인하는 함수
 bool isNumber(const std::string& str) {
     for (size_t i = 0; i < str.length(); i++) {
         if (!isdigit(str[i])) {
@@ -130,11 +72,14 @@ bool isNumber(const std::string& str) {
     return true;
 }
 
-// 입력 받는 함수
 void getInput(const std::string& fieldName, std::string& fieldValue) {
-    while (true) {
+    while (1) {
         std::cout << fieldName << ": ";
-        std::getline(std::cin, fieldValue);
+        if (!std::getline(std::cin, fieldValue) || std::cin.eof()) {
+            std::cout << "EOF detected. Exiting the program.\n";
+            fieldValue.clear(); // 필드 값을 비워서 이후 로직에 영향을 주지 않도록 함
+            break;
+        }
 
         if (fieldName == "Phone Number" && !isNumber(fieldValue)) {
             std::cout << "Enter numbers only for " << fieldName << ".\n";
@@ -146,7 +91,6 @@ void getInput(const std::string& fieldName, std::string& fieldValue) {
         std::cout << fieldName << " field is empty. Enter it again.\n";
     }
 }
-
 
 void addNewContact(PhoneBook& phoneBook) {
 	std::string firstName, lastName, nickName, phoneNumber, darkestSecret;
@@ -175,7 +119,12 @@ int	main()
 	while (1)
 	{
 		std::cout << "\nEnter the command from ADD, SEARCH, or EIXT.\n";
-		std::getline(std::cin, command);
+		if (!std::getline(std::cin, command)) {
+			if (std::cin.eof()) {
+				std::cout << "EOF detected. Exiting the program.\n";
+				break;
+			}
+    }
 
 // C++에서는 문자열을 직접 비교할 수 있다.문자열 리터럴 ADD와 비교함
 		if (command == "ADD")
