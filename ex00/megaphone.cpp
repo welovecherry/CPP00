@@ -1,13 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   megaphone.cpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jungmiho <jungmiho@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/15 16:17:41 by jungmiho          #+#    #+#             */
+/*   Updated: 2024/02/15 20:23:25 by jungmiho         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include <iostream>
 #include <string>
-#include <cctype> // C언어의 기능을 C++에서 사용할 수 있게하는 헤더파일
+#include <cctype>
 
 int main(int ac, char **av)
 {
-	// C++ 에서는 변수를 사용하기 직전 어느 위치에서 든지 변수를 선언할 수 있음
-	//변수는 변수 사용 직전에 선언해도 된다.
-	
 	int			i;
 	size_t		j;
 	std::string	input;
@@ -23,7 +32,7 @@ int main(int ac, char **av)
 		input = av[i];
 		for (j = 0; j < input.length(); j++)
 		{
-			input[j] = std::toupper(input[j]);
+			input[j] = std::toupper(input[j]); // FIXME
 		}
 		std::cout << input << " ";
 	}
