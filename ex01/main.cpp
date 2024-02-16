@@ -6,7 +6,7 @@
 /*   By: jungmiho <jungmiho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 16:18:00 by jungmiho          #+#    #+#             */
-/*   Updated: 2024/02/15 22:38:35 by jungmiho         ###   ########.fr       */
+/*   Updated: 2024/02/16 14:54:00 by jungmiho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int main() {
 	while (1) {
 		std::cout << "\nEnter the command from ADD, SEARCH, or EXIT.\n";
 		if (!std::getline(std::cin, command)) {
-			if (std::cin.eof()) { // FIXME
+			if (std::cin.eof()) {
 				std::cout << "EOF detected. Exiting the program.\n";
 				break;
 			}

@@ -6,7 +6,7 @@
 /*   By: jungmiho <jungmiho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 16:18:22 by jungmiho          #+#    #+#             */
-/*   Updated: 2024/02/15 22:58:48 by jungmiho         ###   ########.fr       */
+/*   Updated: 2024/02/16 15:19:00 by jungmiho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,13 @@ int PhoneBook::getCurrentSize() const {
 }
 
 
-// FIXME: 이 함수 전체 98인지 살펴보기??
 std::string PhoneBook::truncateString(const std::string& str) {
 	if (str.length() > 10)
 		return str.substr(0, 9) + '.';
 	else
 		return str;
 }
-// FIXME: 이 함수 전체 98인지 살펴보기??
+
 void PhoneBook::printHeader(const PhoneBook& phoneBook) {
 
 	std::cout	<< std::right << std::setw(10) << "INDEX" << " | "
@@ -75,33 +74,36 @@ void PhoneBook::searchContact(const PhoneBook& phoneBook) {
 
 	printHeader(phoneBook);
 
-	int index;
-	while (1) {
+	while (true) {
+		int index;
 		std::cout << "Enter the index of the contact to display: \n";
 		std::cin >> index;
-		// FIXME: good(): 98??
-		if (std::cin.good() && index >= 0 && index < phoneBook.getCurrentSize()) {
-			const Contact& contact = phoneBook.getContact(index);
-				std::cout	<< "\nFirst Name: " << contact.getFirstName() << std::endl
-							<< "Last Name: " << contact.getLastName() << std::endl
-							<< "Nickname: " << contact.getNickName() << std::endl
-							<< "Phone Number: " << contact.getPhoneNumber() << std::endl
-							<< "Darkest Secret: " << contact.getDarkestSecret() << std::endl;
-							break;
-		} else if (std::cin.fail()) {
+
+		if (std::cin.fail()) {
 			std::cout << "Invalid input. Please enter a valid number.\n";
-			std::cin.clear(); // 스트림의 오류 상태 클리어
-			// FIXME: 아랫줄 공부하기
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 버퍼 비우기
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			continue;
+		}
+
+		if (index >= 0 && index < phoneBook.getCurrentSize()) {
+			const Contact& contact = phoneBook.getContact(index);
+			std::cout << "\nFirst Name: " << contact.getFirstName() << std::endl
+					<< "Last Name: " << contact.getLastName() << std::endl
+					<< "Nickname: " << contact.getNickName() << std::endl
+					<< "Phone Number: " << contact.getPhoneNumber() << std::endl
+					<< "Darkest Secret: " << contact.getDarkestSecret() << std::endl;
+			break;
 		} else {
-			std::cout << "Invalid index." << std::endl;
+			std::cout << "Invalid index. Please try again.\n";
 		}
 	}
 }
 
+
 bool PhoneBook::isNumber(const std::string& str) {
 	for (size_t i = 0; i < str.length(); i++) {
-		if (!isdigit(str[i])) { // FIXME: cpp98?
+		if (!isdigit(str[i])) {
 			return false;
 		}
 	}
@@ -109,13 +111,13 @@ bool PhoneBook::isNumber(const std::string& str) {
 }
 
 std::string PhoneBook::trim(const std::string& str) {
-	std::string::size_type first = str.find_first_not_of(' '); // FIXME
+	std::string::size_type first = str.find_first_not_of(' ');
 	std::string::size_type last = str.find_last_not_of(' ');
 	
-	if (first == std::string::npos || last == std::string::npos) // FIXME
-		return ""; // FIXME : empty??
+	if (first == std::string::npos || last == std::string::npos)
+		return "";
 	
-	return str.substr(first, last - first + 1); // FIXME: cpp98?
+	return str.substr(first, last - first + 1);
 }
 
 
